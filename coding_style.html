@@ -163,6 +163,56 @@
    Notes Regarding Semantic Versioning and API Changes
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#docstring-examples-best-practice">
+   Docstring Examples Best-Practice
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#setting-up-doctest">
+     Setting Up
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       doctest
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#using-pytest-fixtures">
+     Using
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       pytest
+      </span>
+     </code>
+     Fixtures
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#useful-features">
+   Useful Features
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ellipses-for-random-output">
+     Ellipses For Random Output
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#doctest-skip">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       doctest
+      </span>
+     </code>
+     Skip
+    </a>
+   </li>
+  </ul>
+ </li>
 </ul>
 
 </nav>
@@ -300,6 +350,163 @@ update any projects dependent on the API while still being treated as
 “first-class” users.  Note that due to the complexity of maintaining
 multiple “release branches” in a repository, the number of active
 release branches should be between one and three.</p>
+</div>
+<div class="section" id="docstring-examples-best-practice">
+<h2>Docstring Examples Best-Practice<a class="headerlink" href="#docstring-examples-best-practice" title="Permalink to this headline">¶</a></h2>
+<p>Defining docstring examples for methods and classes are extremely
+useful. The examples give users an easy place to start when trying
+out the API, by showing them exactly how to operate on a method or
+class. By using <code class="docutils literal notranslate"><span class="pre">doctest</span></code> through <code class="docutils literal notranslate"><span class="pre">pytest</span></code>, docstring examples can
+also be used to perform regression testing to verify that the code is
+executing as expected.</p>
+<p>This is an important feature of maintainable documentation as examples
+must always match the API they are documenting, and any changes within
+the API without a corresponding change in the documentation will
+trigger doctest failures.</p>
+<div class="section" id="setting-up-doctest">
+<h3>Setting Up <code class="docutils literal notranslate"><span class="pre">doctest</span></code><a class="headerlink" href="#setting-up-doctest" title="Permalink to this headline">¶</a></h3>
+<p>First, install <code class="docutils literal notranslate"><span class="pre">pytest</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pytest</span>
+</pre></div>
+</div>
+<p>Then, <code class="docutils literal notranslate"><span class="pre">doctest</span></code> can be run on any Python file by running:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span> <span class="o">--</span><span class="n">doctest</span><span class="o">-</span><span class="n">modules</span> <span class="n">file</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>Here, <code class="docutils literal notranslate"><span class="pre">doctest</span></code> will search for any examples in the docstrings and will then
+execute them to verify that they function as written.</p>
+</div>
+<div class="section" id="using-pytest-fixtures">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">pytest</span></code> Fixtures<a class="headerlink" href="#using-pytest-fixtures" title="Permalink to this headline">¶</a></h3>
+<p>To define a setup sequence before the <code class="docutils literal notranslate"><span class="pre">doctest</span></code> run or before a given
+module is tested, <code class="docutils literal notranslate"><span class="pre">pytest</span></code> fixtures can be used. Fixtures allow docstring
+examples to access shared objects, so there is no need to repeat the setup
+in each example.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> fixtures can defined in a <code class="docutils literal notranslate"><span class="pre">conftest.py</span></code> file next to the source
+code. The following example shows a fixture that is run automatically for
+each <code class="docutils literal notranslate"><span class="pre">doctest</span></code> session.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="kn">from</span> <span class="nn">pyaedt</span> <span class="kn">import</span> <span class="n">Desktop</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">autouse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">start_aedt</span><span class="p">():</span>
+    <span class="n">desktop</span> <span class="o">=</span> <span class="n">Desktop</span><span class="p">(</span><span class="s2">&quot;2021.1&quot;</span><span class="p">,</span> <span class="n">NG</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">desktop</span><span class="o">.</span><span class="n">disable_autosave</span><span class="p">()</span>
+
+    <span class="c1"># Wait to run doctest on docstrings</span>
+    <span class="k">yield</span> <span class="n">desktop</span>
+    <span class="n">desktop</span><span class="o">.</span><span class="n">force_close_desktop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Fixtures can also be defined in a separate Python file from
+<code class="docutils literal notranslate"><span class="pre">conftest.py</span></code>. This may help keep the fixtures more organized. Fixtures
+from other files need to be imported in the main <code class="docutils literal notranslate"><span class="pre">conftest.py</span></code> file. The
+following example shows how to import fixtures defined in an
+<code class="docutils literal notranslate"><span class="pre">icepak_fixtures.py</span></code> file under the <code class="docutils literal notranslate"><span class="pre">doctest_fixtures</span></code> folder.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="kn">from</span> <span class="nn">pyaedt</span> <span class="kn">import</span> <span class="n">Desktop</span>
+<span class="kn">from</span> <span class="nn">pyaedt.doctest_fixtures</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># Import fixtures from other files</span>
+<span class="n">pytest_plugins</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;pyaedt.doctest_fixtures.icepak_fixtures&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">autouse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">start_aedt</span><span class="p">():</span>
+    <span class="n">desktop</span> <span class="o">=</span> <span class="n">Desktop</span><span class="p">(</span><span class="s2">&quot;2021.1&quot;</span><span class="p">,</span> <span class="n">NG</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">desktop</span><span class="o">.</span><span class="n">disable_autosave</span><span class="p">()</span>
+
+    <span class="c1"># Wait to run doctest on docstrings</span>
+    <span class="k">yield</span> <span class="n">desktop</span>
+    <span class="n">desktop</span><span class="o">.</span><span class="n">force_close_desktop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">doctest_namespace</span></code> fixture built in to <code class="docutils literal notranslate"><span class="pre">doctest</span></code> allows injecting
+items from a fixture into the context of the <code class="docutils literal notranslate"><span class="pre">doctest</span></code> run. To use this
+feature, the fixture needs to accept the <code class="docutils literal notranslate"><span class="pre">doctest_namespace</span></code> dictionary
+as an argument. Then, objects can be added to the <code class="docutils literal notranslate"><span class="pre">doctest_namespace</span></code>
+dictionary and used directly in a docstring example.</p>
+<p>The code below shows how the <code class="docutils literal notranslate"><span class="pre">Icepak</span></code> object can be stored in the
+<code class="docutils literal notranslate"><span class="pre">doctest_namespace</span></code> dictionary by adding the key <code class="docutils literal notranslate"><span class="pre">icepak</span></code> with the
+<code class="docutils literal notranslate"><span class="pre">Icepak</span></code> object as the value.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">from</span> <span class="nn">pyaedt</span> <span class="kn">import</span> <span class="n">Icepak</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">autouse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="s2">&quot;module&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">create_icepak</span><span class="p">(</span><span class="n">doctest_namespace</span><span class="p">):</span>
+    <span class="n">doctest_namespace</span><span class="p">[</span><span class="s2">&quot;icepak&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Icepak</span><span class="p">(</span><span class="n">projectname</span><span class="o">=</span><span class="s2">&quot;Project1&quot;</span><span class="p">,</span> <span class="n">designname</span><span class="o">=</span><span class="s2">&quot;IcepakDesign1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then, the <code class="docutils literal notranslate"><span class="pre">Icepak</span></code> object can be used directly inside a docstring
+example, by referencing the key <code class="docutils literal notranslate"><span class="pre">icepak</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">assign_openings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">air_faces</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Assign openings to a list of faces.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    air_faces : list</span>
+<span class="sd">        List of face names.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`pyaedt.modules.Boundary.BoundaryObject`</span>
+<span class="sd">        Boundary object when successful or ``None`` when failed.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    Create an opening boundary for the faces of the &quot;USB_GND&quot; object.</span>
+
+<span class="sd">    &gt;&gt;&gt; faces = icepak.modeler.primitives[&quot;USB_GND&quot;].faces</span>
+<span class="sd">    &gt;&gt;&gt; face_names = [face.id for face in faces]</span>
+<span class="sd">    &gt;&gt;&gt; boundary = icepak.assign_openings(face_names)</span>
+<span class="sd">    pyaedt Info: Face List boundary_faces created</span>
+<span class="sd">    pyaedt Info: Opening Assigned</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="useful-features">
+<h2>Useful Features<a class="headerlink" href="#useful-features" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ellipses-for-random-output">
+<h3>Ellipses For Random Output<a class="headerlink" href="#ellipses-for-random-output" title="Permalink to this headline">¶</a></h3>
+<p>If the output of some operation in an example cannot be verified exactly,
+an ellipsis (<code class="docutils literal notranslate"><span class="pre">...</span></code>) can be used in the expected output. This allows it
+to match any substring in the actual output.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Examples</span>
+<span class="o">--------</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">desktop</span> <span class="o">=</span> <span class="n">Desktop</span><span class="p">(</span><span class="s2">&quot;2021.1&quot;</span><span class="p">)</span>
+<span class="n">pyaedt</span> <span class="n">Info</span><span class="p">:</span> <span class="n">pyaedt</span> <span class="n">v</span><span class="o">...</span>
+<span class="n">pyaedt</span> <span class="n">Info</span><span class="p">:</span> <span class="n">Python</span> <span class="n">version</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>To allow this, <code class="docutils literal notranslate"><span class="pre">doctest</span></code> must be run with the option set to allow ellipses.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span> <span class="o">--</span><span class="n">doctest</span><span class="o">-</span><span class="n">modules</span> <span class="o">-</span><span class="n">o</span> <span class="n">ELLIPSIS</span> <span class="n">file</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="doctest-skip">
+<h3><code class="docutils literal notranslate"><span class="pre">doctest</span></code> Skip<a class="headerlink" href="#doctest-skip" title="Permalink to this headline">¶</a></h3>
+<p>The directive <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">doctest:</span> <span class="pre">+SKIP</span></code> can be added to any line of a
+docstring example so that it is not executed in <code class="docutils literal notranslate"><span class="pre">doctest-modules</span></code>. This is useful for examples
+that cannot run within <code class="docutils literal notranslate"><span class="pre">pytest</span></code> or have side-effects that will affect the other tests
+if they are run during the <code class="docutils literal notranslate"><span class="pre">doctest</span></code> session.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Examples</span>
+<span class="o">--------</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">desktop</span> <span class="o">=</span> <span class="n">Desktop</span><span class="p">(</span><span class="s2">&quot;2021.1&quot;</span><span class="p">)</span> <span class="c1"># doctest: +SKIP</span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 
