@@ -189,27 +189,27 @@
      Fixtures
     </a>
    </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#useful-features">
-   Useful Features
-  </a>
-  <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#ellipses-for-random-output">
-     Ellipses For Random Output
+    <a class="reference internal nav-link" href="#useful-features">
+     Useful Features
     </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#doctest-skip">
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       doctest
-      </span>
-     </code>
-     Skip
-    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#ellipses-for-random-output">
+       Ellipses For Random Output
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#doctest-skip">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         doctest
+        </span>
+       </code>
+       Skip
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -473,11 +473,10 @@ example, by referencing the key <code class="docutils literal notranslate"><span
 </pre></div>
 </div>
 </div>
-</div>
 <div class="section" id="useful-features">
-<h2>Useful Features<a class="headerlink" href="#useful-features" title="Permalink to this headline">¶</a></h2>
+<h3>Useful Features<a class="headerlink" href="#useful-features" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="ellipses-for-random-output">
-<h3>Ellipses For Random Output<a class="headerlink" href="#ellipses-for-random-output" title="Permalink to this headline">¶</a></h3>
+<h4>Ellipses For Random Output<a class="headerlink" href="#ellipses-for-random-output" title="Permalink to this headline">¶</a></h4>
 <p>If the output of some operation in an example cannot be verified exactly,
 an ellipsis (<code class="docutils literal notranslate"><span class="pre">...</span></code>) can be used in the expected output. This allows it
 to match any substring in the actual output.</p>
@@ -495,7 +494,7 @@ to match any substring in the actual output.</p>
 </div>
 </div>
 <div class="section" id="doctest-skip">
-<h3><code class="docutils literal notranslate"><span class="pre">doctest</span></code> Skip<a class="headerlink" href="#doctest-skip" title="Permalink to this headline">¶</a></h3>
+<h4><code class="docutils literal notranslate"><span class="pre">doctest</span></code> Skip<a class="headerlink" href="#doctest-skip" title="Permalink to this headline">¶</a></h4>
 <p>The directive <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">doctest:</span> <span class="pre">+SKIP</span></code> can be added to any line of a
 docstring example so that it is not executed in <code class="docutils literal notranslate"><span class="pre">doctest-modules</span></code>. This is useful for examples
 that cannot run within <code class="docutils literal notranslate"><span class="pre">pytest</span></code> or have side-effects that will affect the other tests
@@ -505,6 +504,7 @@ if they are run during the <code class="docutils literal notranslate"><span clas
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">desktop</span> <span class="o">=</span> <span class="n">Desktop</span><span class="p">(</span><span class="s2">&quot;2021.1&quot;</span><span class="p">)</span> <span class="c1"># doctest: +SKIP</span>
 </pre></div>
+</div>
 </div>
 </div>
 </div>
