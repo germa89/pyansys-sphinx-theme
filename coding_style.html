@@ -277,17 +277,18 @@ and then using an error after a minor release or two.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># one of the following:</span>
 
-        <span class="c1"># raise a DeprecationWarning.  User won&#39;t have to change anything</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;assignmaterial is deprecated.  Please use assign_material instead&#39;</span><span class="p">,</span>
+        <span class="c1"># raise a DeprecationWarning. User won&#39;t have to change anything</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;`assignmaterial` is deprecated. Use `assign_material` instead.&#39;</span><span class="p">,</span>
                       <span class="ne">DeprecationWarning</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assign_material</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">mat</span><span class="p">)</span>
 
         <span class="c1"># or raise an AttributeError (could also make a custom DeprecationError)</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;assignmaterial is deprecated.  Please use assign_material instead&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;`assignmaterial` is deprecated. Use `assign_material` instead.&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">assign_material</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">mat</span><span class="p">):</span>
-        <span class="s2">&quot;&quot;&quot;Assign a material to one or more objects.</span>
-<span class="s2">        ...</span>
+        <span class="sd">&quot;&quot;&quot;Assign a material to one or more objects.</span>
+<span class="sd">        ...</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 </pre></div>
 </div>
 <p>If a method is outright removed, there’s no reason to provide a link
