@@ -159,6 +159,11 @@
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#imports-best-practice">
+   Imports Best-Practice
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#notes-regarding-semantic-versioning-and-api-changes">
    Notes Regarding Semantic Versioning and API Changes
   </a>
@@ -324,6 +329,79 @@ there is no built-in depreciation error within Python.</p>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">raise</span> <span class="n">DeprecationError</span><span class="p">(</span><span class="s1">&#39;`my_function` has been deprecated&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="imports-best-practice">
+<h2>Imports Best-Practice<a class="headerlink" href="#imports-best-practice" title="Permalink to this headline">¶</a></h2>
+<p>Following the <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/#imports">PEP8 guidelines</a>,
+imports should be added at the top of the file and should be grouped in the following order:</p>
+<ol class="arabic simple">
+<li><p>Standard library imports.</p></li>
+<li><p>Related third party imports.</p></li>
+<li><p>Local application/library specific imports.</p></li>
+</ol>
+<p>For example, consider the unorganized imports below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ansys.mapdl.core.plotting</span> <span class="kn">import</span> <span class="n">general_plotter</span>
+<span class="kn">from</span> <span class="nn">ansys.mapdl.core.post</span> <span class="kn">import</span> <span class="n">PostProcessing</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">rmtree</span><span class="p">,</span> <span class="n">copyfile</span>
+<span class="kn">import</span> <span class="nn">weakref</span>
+<span class="kn">from</span> <span class="nn">ansys.mapdl.core.errors</span> <span class="kn">import</span> <span class="n">MapdlRuntimeError</span><span class="p">,</span> <span class="n">MapdlInvalidRoutineError</span>
+<span class="kn">from</span> <span class="nn">ansys.mapdl.core.commands</span> <span class="kn">import</span> <span class="n">Commands</span>
+<span class="kn">from</span> <span class="nn">ansys.mapdl.core.inline_functions</span> <span class="kn">import</span> <span class="n">Query</span>
+</pre></div>
+</div>
+<p>Organizing those same imports into groups vastly improves readibilty:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">rmtree</span><span class="p">,</span> <span class="n">copyfile</span>
+<span class="kn">import</span> <span class="nn">weakref</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">ansys.mapdl.core.plotting</span> <span class="kn">import</span> <span class="n">general_plotter</span>
+<span class="kn">from</span> <span class="nn">ansys.mapdl.core.post</span> <span class="kn">import</span> <span class="n">PostProcessing</span>
+<span class="kn">from</span> <span class="nn">ansys.mapdl.core.errors</span> <span class="kn">import</span> <span class="n">MapdlRuntimeError</span><span class="p">,</span> <span class="n">MapdlInvalidRoutineError</span>
+<span class="kn">from</span> <span class="nn">ansys.mapdl.core.commands</span> <span class="kn">import</span> <span class="n">Commands</span>
+<span class="kn">from</span> <span class="nn">ansys.mapdl.core.inline_functions</span> <span class="kn">import</span> <span class="n">Query</span>
+</pre></div>
+</div>
+<p>It is also recommended that the imports within a section be organized alphabetically.
+Following this convention makes imports easily searchable. This standard is optional
+and will not be enforced, but it may be preferred in some projects.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">weakref</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">copyfile</span><span class="p">,</span> <span class="n">rmtree</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">ansys.mapdl.core.commands</span> <span class="kn">import</span> <span class="n">Commands</span>
+<span class="kn">from</span> <span class="nn">ansys.mapdl.core.errors</span> <span class="kn">import</span> <span class="n">MapdlInvalidRoutineError</span><span class="p">,</span> <span class="n">MapdlRuntimeError</span>
+<span class="kn">from</span> <span class="nn">ansys.mapdl.core.inline_functions</span> <span class="kn">import</span> <span class="n">Query</span>
+<span class="kn">from</span> <span class="nn">ansys.mapdl.core.plotting</span> <span class="kn">import</span> <span class="n">general_plotter</span>
+<span class="kn">from</span> <span class="nn">ansys.mapdl.core.post</span> <span class="kn">import</span> <span class="n">PostProcessing</span>
+</pre></div>
+</div>
+<p>Additionally, it is recommended to use absolute imports over relative imports, since they are
+more readable and reliable:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Not recommended</span>
+<span class="kn">from</span> <span class="nn">.core.plotting</span> <span class="kn">import</span> <span class="n">general_plotter</span>
+
+<span class="c1"># Recommended</span>
+<span class="kn">from</span> <span class="nn">ansys.mapdl.core.plotting</span> <span class="kn">import</span> <span class="n">general_plotter</span>
 </pre></div>
 </div>
 </div>
